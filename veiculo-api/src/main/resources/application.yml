@@ -1,4 +1,12 @@
+server:
+    port: 8080
+    error:
+        include-message: always
+
 spring:
     data:
         mongodb:
-            uri: mongodb://localhost:27014/veiculo
+            uri: mongodb://localhost:27017/veiculo
+
+integration:
+    tipoVeiculo.url: http://localhost:8090

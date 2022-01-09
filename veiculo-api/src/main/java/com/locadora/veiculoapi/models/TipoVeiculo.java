@@ -1,37 +1,24 @@
 package com.locadora.veiculoapi.models;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.AllArgsConstructor;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.validation.constraints.NotNull;
 
 @Data
-@Document("Veiculo")
+@Document("TipoVeiculo")
 @NoArgsConstructor
 @AllArgsConstructor
-public class Veiculo {
+public class TipoVeiculo {
+
     @Id
     private String id;
 
-    @NotNull
-    private String marca;
+    private String nome;
 
-    @NotNull
-    private String modelo;
-
-    @NotNull
-    private String cor;
-
-    @NotNull
-    private String placa;
-
-    @NotNull
-    private Integer ano;
-
-    @NotNull
-    private String tipoVeiculoCode;
-
+    private Double preco;
 }
