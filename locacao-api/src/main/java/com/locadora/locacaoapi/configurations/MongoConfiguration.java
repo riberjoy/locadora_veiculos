@@ -8,4 +8,6 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 @EnableMongoAuditing
 @EnableMongoRepositories(basePackages = {"com.locadora.locacaoapi.repositorys"})
 public class MongoConfiguration {
+    public MongoConfiguration() {
+    }
 }
