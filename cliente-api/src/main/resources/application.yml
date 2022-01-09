@@ -1,4 +1,9 @@
+server:
+    port: 8082
+    error:
+        include-message: always
+
 spring:
     data:
         mongodb:
-            uri: mongodb://localhost:27010/cliente
+            uri: mongodb+srv://hyankelwin:k9KNpzPOTJewEqe9@cluster0.vqyrm.mongodb.net/faculdade

@@ -1,4 +1,14 @@
 spring:
     data:
         mongodb:
-            uri: mongodb://localhost:27018/locacao
+            uri: mongodb+srv://hyankelwin:k9KNpzPOTJewEqe9@cluster0.vqyrm.mongodb.net/faculdade
+
+server:
+    port: 8085
+    error:
+        include-message: always
+
+integration:
+    veiculo.url: http://localhost:8080
+    funcionario.url: http://localhost:8081
+    cliente.url: http://localhost:8082
