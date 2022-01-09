@@ -37,10 +37,13 @@ public class FuncionarioController {
 	@ApiOperation("Registra um Funcionario")
     @PostMapping("/inserir")
 	public void inserir(@Valid @RequestBody Funcionario funcionario) {
-		Optional<Funcionario> novoFuncionario = this.repositorio.findById(funcionario.getId());
+		if (funcionario.getId() != null) {
 
-		if(!novoFuncionario.isEmpty()){
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Funcionario já existe!");
+			Optional<Funcionario> novoFuncionario = this.repositorio.findById(funcionario.getId());
+
+			if (!novoFuncionario.isEmpty()) {
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Funcionario já existe!");
+			}
 		}
 
 		this.repositorio.insert(funcionario);

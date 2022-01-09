@@ -71,7 +71,7 @@ public class VeiculoController {
 
     @GetMapping("/{idVeiculo}")
     @ApiOperation("Lista um Veiculo pelo seu id")
-    public Veiculo listarVeiculo(@PathParam("idVeiculo") String idVeiculo) {
+    public Veiculo listarVeiculo(@PathVariable("idVeiculo") String idVeiculo) {
         Veiculo veiculo = this.veiculoRepository.findById(idVeiculo).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Identificador do veiculo não encontrado!") );
         return veiculo;

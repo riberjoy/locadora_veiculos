@@ -27,8 +27,11 @@ public class TipoVeiculoController {
     @PostMapping
     @ApiOperation("Cadastra um novo tipo de veiculo")
     public void novoTipoVeiculo(@Valid @RequestBody TipoVeiculo veiculo){
-        TipoVeiculo tipoVeiculo = this.tipoVeiculoRepository.findByNome(veiculo.getNome()).orElseThrow(
-                () -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Tipo de Veículo já existente!"));
+        TipoVeiculo tipoVeiculo = this.tipoVeiculoRepository.findByNome(veiculo.getNome()).orElse(null);
+
+        if (Objects.nonNull(tipoVeiculo)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Tipo de Veículo já existente!");
+        }
 
         this.tipoVeiculoRepository.save(veiculo);
     }

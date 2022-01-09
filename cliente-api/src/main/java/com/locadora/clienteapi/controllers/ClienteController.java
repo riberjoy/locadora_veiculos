@@ -37,10 +37,12 @@ public class ClienteController {
 	@ApiOperation("Registra um Cliente")
     @PostMapping("/inserir")
 	public void inserir(@Valid @RequestBody Cliente cliente) {
-		Optional<Cliente> novoCliente = this.repositorio.findById(cliente.getId());
+		if (cliente.getId() != null) {
+			Optional<Cliente> novoCliente = this.repositorio.findById(cliente.getId());
 
-		if(!novoCliente.isEmpty()){
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cliente já existe!");
+			if (!novoCliente.isEmpty()) {
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cliente já existe!");
+			}
 		}
 
 		this.repositorio.insert(cliente);
