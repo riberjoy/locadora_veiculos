@@ -37,6 +37,12 @@ public class ClienteController {
 	@ApiOperation("Registra um Cliente")
     @PostMapping("/inserir")
 	public void inserir(@Valid @RequestBody Cliente cliente) {
+		Optional<Cliente> novoCliente = this.repositorio.findById(cliente.getId());
+
+		if(!novoCliente.isEmpty()){
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cliente já existe!");
+		}
+
 		this.repositorio.insert(cliente);
 	}
 	
@@ -48,8 +54,28 @@ public class ClienteController {
 
 		this.repositorio.save(cliente);
 	}
+
+	@ApiOperation("Desativar um Cliente")
+	@PutMapping("/{id}/desativar")
+	public void desativarCliente(@PathVariable("id") String id) {
+		Cliente cliente = this.repositorio.findById(id).orElseThrow(
+				() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente não encontrado!") );
+
+		cliente.setEnabled(false);
+		this.repositorio.save(cliente);
+	}
+
+	@ApiOperation("Ativar um Cliente")
+	@PutMapping("/{id}/ativar")
+	public void ativarCliente(@PathVariable("id") String id) {
+		Cliente cliente = this.repositorio.findById(id).orElseThrow(
+				() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente não encontrado!") );
+
+		cliente.setEnabled(true);
+		this.repositorio.save(cliente);
+	}
 	
-	@ApiOperation("Lista todos os Clientes")
+	@ApiOperation("Listar todos os Clientes")
     @GetMapping
     public PageResponse<Cliente> listarTodos(Integer page, Integer size) {
 		Pageable pageable = Objects.nonNull(page) && Objects.nonNull(size) ? PageRequest.of(page, size) : Pageable.unpaged();

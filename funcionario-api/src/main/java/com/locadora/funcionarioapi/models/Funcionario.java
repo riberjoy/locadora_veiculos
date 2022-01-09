@@ -31,5 +31,5 @@ public class Funcionario {
 	private String cpf;
 	
 	@NotNull
-	private Boolean enabled; // Ativo S/N
+	private Boolean enabled = true; // Ativo S/N
 }

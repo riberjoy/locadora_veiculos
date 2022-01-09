@@ -29,4 +29,7 @@ public class Cliente {
 
     @NotNull
     private String telefone;
+
+    @NotNull
+    private Boolean enabled = true; // Ativo S/N
 }

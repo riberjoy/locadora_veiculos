@@ -37,6 +37,12 @@ public class FuncionarioController {
 	@ApiOperation("Registra um Funcionario")
     @PostMapping("/inserir")
 	public void inserir(@Valid @RequestBody Funcionario funcionario) {
+		Optional<Funcionario> novoFuncionario = this.repositorio.findById(funcionario.getId());
+
+		if(!novoFuncionario.isEmpty()){
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Funcionario já existe!");
+		}
+
 		this.repositorio.insert(funcionario);
 	}
 	
@@ -48,8 +54,28 @@ public class FuncionarioController {
         
 		this.repositorio.save(funcionario);
 	}
+
+	@ApiOperation("Desativar um Funcionario")
+	@PutMapping("/{id}/desativar")
+	public void desativarFuncionario(@PathVariable("id") String id) {
+		Funcionario funcionario = this.repositorio.findById(id).orElseThrow(
+				() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Funcionario não encontrado!") );
+
+		funcionario.setEnabled(false);
+		this.repositorio.save(funcionario);
+	}
+
+	@ApiOperation("Ativar um Funcionario")
+	@PutMapping("/{id}/ativar")
+	public void ativarFuncionario(@PathVariable("id") String id) {
+		Funcionario funcionario = this.repositorio.findById(id).orElseThrow(
+				() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Funcionario não encontrado!") );
+
+		funcionario.setEnabled(true);
+		this.repositorio.save(funcionario);
+	}
 	
-	@ApiOperation("Lista todos os Funcionario")
+	@ApiOperation("Listar todos os Funcionario")
     @GetMapping
     public PageResponse<Funcionario> listarTodos(Integer page, Integer size) {
 		Pageable pageable = Objects.nonNull(page) && Objects.nonNull(size) ? PageRequest.of(page, size) : Pageable.unpaged();
