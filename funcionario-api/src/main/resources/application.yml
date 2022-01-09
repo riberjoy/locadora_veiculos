@@ -1,4 +1,9 @@
 spring:
     data:
         mongodb:
-            uri: mongodb://localhost:27012/funcionario
+            uri: mongodb://localhost:27017/funcionario
+
+server:
+    port: 8081
+    error:
+        include-message: always
