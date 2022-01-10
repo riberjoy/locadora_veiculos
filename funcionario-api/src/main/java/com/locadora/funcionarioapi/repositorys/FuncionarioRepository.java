@@ -13,5 +13,6 @@ public interface FuncionarioRepository extends MongoRepository<Funcionario, Stri
 	Page<Funcionario> findAll(Pageable pageable);
 
 	Optional<Funcionario> findById(String id);
-    
+
+	Page<Funcionario> findByEnabled(Boolean enabled, Pageable pageable);
 }

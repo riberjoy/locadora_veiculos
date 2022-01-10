@@ -6,7 +6,7 @@ server:
 spring:
     data:
         mongodb:
-            uri: mongodb+srv://hyankelwin:k9KNpzPOTJewEqe9@cluster0.vqyrm.mongodb.net/faculdade
+            uri: mongodb://localhost:27017/veiculo
 
 integration:
     tipoVeiculo.url: http://localhost:8090

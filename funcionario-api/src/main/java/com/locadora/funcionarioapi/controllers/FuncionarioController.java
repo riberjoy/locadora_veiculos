@@ -11,13 +11,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.locadora.funcionarioapi.models.Funcionario;
@@ -80,9 +74,19 @@ public class FuncionarioController {
 	
 	@ApiOperation("Listar todos os Funcionario")
     @GetMapping
-    public PageResponse<Funcionario> listarTodos(Integer page, Integer size) {
+    public PageResponse<Funcionario> listarTodos(Integer page, Integer size,
+												 @RequestParam(value = "enabled", required = false) Boolean enabled) {
+
 		Pageable pageable = Objects.nonNull(page) && Objects.nonNull(size) ? PageRequest.of(page, size) : Pageable.unpaged();
-        Page<Funcionario> pageFuncionario = repositorio.findAll(pageable);
+
+		Page<Funcionario> pageFuncionario;
+
+		if(Objects.isNull(enabled)){
+			pageFuncionario = this.repositorio.findAll(pageable);
+		}else{
+			pageFuncionario = this.repositorio.findByEnabled(enabled, pageable);
+		}
+
         return new PageResponse<Funcionario>(pageFuncionario);
     }
 	
