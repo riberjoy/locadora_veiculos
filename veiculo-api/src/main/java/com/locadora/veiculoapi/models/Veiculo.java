@@ -3,6 +3,7 @@ package com.locadora.veiculoapi.models;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
+import org.springframework.boot.context.properties.bind.DefaultValue;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -14,7 +15,7 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 public class Veiculo {
     @Id
-    private String id;
+    private String id = null;
 
     @NotNull
     private String marca;
@@ -33,5 +34,10 @@ public class Veiculo {
 
     @NotNull
     private String tipoVeiculoCode;
+
+    @NotNull
+    private Boolean enabled = true; // Ativo S/N
+
+    private String enabledDescricao;
 
 }

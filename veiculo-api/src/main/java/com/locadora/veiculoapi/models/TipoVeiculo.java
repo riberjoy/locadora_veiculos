@@ -21,4 +21,8 @@ public class TipoVeiculo {
     private String nome;
 
     private Double preco;
+
+    private Boolean enabled;
+
+    private String enabledDescricao;
 }

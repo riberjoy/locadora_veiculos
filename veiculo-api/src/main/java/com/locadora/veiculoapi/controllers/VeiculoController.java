@@ -2,6 +2,7 @@ package com.locadora.veiculoapi.controllers;
 
 import com.locadora.veiculoapi.integrations.TipoVeiculoApiGateway;
 import com.locadora.veiculoapi.models.PageResponse;
+import com.locadora.veiculoapi.models.TipoVeiculo;
 import com.locadora.veiculoapi.models.Veiculo;
 import com.locadora.veiculoapi.repositorys.VeiculoRepository;
 import io.swagger.annotations.ApiOperation;
@@ -36,7 +37,10 @@ public class VeiculoController {
     @ApiOperation("Cadastra um novo veiculo")
     public void novoVeiculo(@Valid @RequestBody Veiculo veiculo){
 
-        this.tipoVeiculoApiGateway.send(veiculo.getTipoVeiculoCode());
+        TipoVeiculo tipoVeiculo = this.tipoVeiculoApiGateway.send(veiculo.getTipoVeiculoCode());
+
+        if( Boolean.FALSE.equals(tipoVeiculo.getEnabled()))
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Tipo de veículo indisponível!");
 
         List<Veiculo> veiculoBuca = this.veiculoRepository
                 .findByMarcaAndModeloAndCorAndPlacaAndAnoAndTipoVeiculoCode(
@@ -63,9 +67,18 @@ public class VeiculoController {
 
     @GetMapping
     @ApiOperation("Lista todos os Veiculos")
-    public PageResponse listarTodosVeiculos(Integer page, Integer size) {
+    public PageResponse listarTodosVeiculos(Integer page, Integer size,
+                                            @RequestParam(value = "enabled", required = false) Boolean enabled) {
+
         Pageable pageable = Objects.nonNull(page) && Objects.nonNull(size) ? PageRequest.of(page, size) : Pageable.unpaged();
-        Page<Veiculo> veiculos =  this.veiculoRepository.findAll(pageable);
+        Page<Veiculo> veiculos;
+
+        if(Objects.isNull(enabled)){
+            veiculos = this.veiculoRepository.findAll(pageable);
+        }else{
+            veiculos = this.veiculoRepository.findByEnabled(enabled, pageable);
+        }
+
         return new PageResponse(veiculos);
     }
 
@@ -75,5 +88,16 @@ public class VeiculoController {
         Veiculo veiculo = this.veiculoRepository.findById(idVeiculo).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Identificador do veiculo não encontrado!") );
         return veiculo;
+    }
+
+    @DeleteMapping("/{idVeiculo}")
+    @ApiOperation("Exclusão lógica de um Veiculo pelo seu id")
+    public void delecaoLogicaVeiculo(@PathVariable("idVeiculo") String idVeiculo,
+                                     @RequestParam(value = "enabledDescricao", defaultValue = "") String enabledDescricao) {
+        Veiculo veiculo = this.veiculoRepository.findById(idVeiculo).orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Identificador do veiculo não encontrado!") );
+        veiculo.setEnabled(false);
+        veiculo.setEnabledDescricao(enabledDescricao);
+        this.veiculoRepository.save(veiculo);
     }
 }

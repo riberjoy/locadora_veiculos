@@ -14,6 +14,8 @@ import java.util.Optional;
 public interface VeiculoRepository extends MongoRepository<Veiculo, String> {
     Page<Veiculo> findAll(Pageable pageable);
 
+    Page<Veiculo> findByEnabled(Boolean enabled, Pageable pageable);
+
     List<Veiculo> findByMarcaAndModeloAndCorAndPlacaAndAnoAndTipoVeiculoCode(
             String marca, String modelo, String cor,
             String placa, Integer ano, String tipoVeiculoCode);

@@ -12,5 +12,7 @@ import java.util.Optional;
 public interface TipoVeiculoRepository extends MongoRepository<TipoVeiculo, String> {
     Page<TipoVeiculo> findAll(Pageable pageable);
 
+    Page<TipoVeiculo> findByEnabled(Boolean enabled, Pageable pageable);
+
     Optional<TipoVeiculo> findByNome(String nome);
 }

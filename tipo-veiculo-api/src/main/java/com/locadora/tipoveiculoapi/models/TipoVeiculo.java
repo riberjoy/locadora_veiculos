@@ -23,4 +23,9 @@ public class TipoVeiculo {
     private String nome;
 
     private Double preco;
+
+    @NotNull
+    private Boolean enabled = true; // Ativo S/N
+
+    private String enabledDescricao;
 }

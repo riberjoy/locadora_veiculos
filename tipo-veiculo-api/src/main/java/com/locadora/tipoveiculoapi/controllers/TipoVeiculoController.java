@@ -47,10 +47,19 @@ public class TipoVeiculoController {
 
     @GetMapping
     @ApiOperation("Lista todos os tipos de veiculos")
-    public PageResponse listarTodosTiposVeiculos(Integer page, Integer size) {
+    public PageResponse listarTodosTiposVeiculos(Integer page, Integer size,
+                                                 @RequestParam(value = "enabled", required = false) Boolean enabled) {
+
         Pageable pageable = Objects.nonNull(page) && Objects.nonNull(size) ? PageRequest.of(page, size) : Pageable.unpaged();
-        Page<TipoVeiculo> veiculos =  this.tipoVeiculoRepository.findAll(pageable);
-        return new PageResponse(veiculos);
+        Page<TipoVeiculo> tipoVeiculos;
+
+        if(Objects.isNull(enabled)){
+            tipoVeiculos = this.tipoVeiculoRepository.findAll(pageable);
+        }else{
+            tipoVeiculos = this.tipoVeiculoRepository.findByEnabled(enabled, pageable);
+        }
+
+        return new PageResponse(tipoVeiculos);
     }
 
     @GetMapping("/{tipoVeiculoCode}")
@@ -60,5 +69,16 @@ public class TipoVeiculoController {
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Identificador do tipo de veiculo não encontrado!") );
 
         return tipoVeiculo;
+    }
+
+    @DeleteMapping("/{idTipoVeiculo}")
+    @ApiOperation("Exclusão lógica de um Tipo de Veiculo pelo seu id")
+    public void delecaoLogicaTipoVeiculo(@PathVariable("idTipoVeiculo") String idTipoVeiculo,
+                                     @RequestParam(value = "enabledDescricao", defaultValue = "") String enabledDescricao) {
+        TipoVeiculo tipoVeiculo = this.tipoVeiculoRepository.findById(idTipoVeiculo).orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Identificador do tipo de veiculo não encontrado!") );
+        tipoVeiculo.setEnabled(false);
+        tipoVeiculo.setEnabledDescricao(enabledDescricao);
+        this.tipoVeiculoRepository.save(tipoVeiculo);
     }
 }
